@@ -4,6 +4,8 @@ import fetch from 'node-fetch';
 import NodeCache from 'node-cache';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import fs from 'fs';
+const FAVORITES_FILE = './favorites.json';
 
 dotenv.config();
 const TMDB_KEY = process.env.TMDB_KEY;
@@ -99,4 +101,45 @@ app.get('/movie/:id', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Proxy server listening on http://0.0.0.0:${PORT}`);
+});
+
+
+// Утилиты
+const readFavorites = () => {
+  if (!fs.existsSync(FAVORITES_FILE)) return {};
+  return JSON.parse(fs.readFileSync(FAVORITES_FILE, 'utf-8'));
+};
+const writeFavorites = (data) => {
+  fs.writeFileSync(FAVORITES_FILE, JSON.stringify(data, null, 2));
+};
+
+// Получить избранное
+app.get('/favorites/:userId', (req, res) => {
+  const { userId } = req.params;
+  const allFavorites = readFavorites();
+  res.json(allFavorites[userId] || []);
+});
+
+// Добавить фильм в избранное
+app.post('/favorites/:userId', express.json(), (req, res) => {
+  const { userId } = req.params;
+  const movie = req.body;
+
+  const allFavorites = readFavorites();
+  const userFavs = new Map((allFavorites[userId] || []).map(f => [f.id, f]));
+  userFavs.set(movie.id, movie);
+
+  allFavorites[userId] = Array.from(userFavs.values());
+  writeFavorites(allFavorites);
+  res.status(201).json({ success: true });
+});
+
+// Удалить фильм
+app.delete('/favorites/:userId/:movieId', (req, res) => {
+  const { userId, movieId } = req.params;
+  const allFavorites = readFavorites();
+
+  allFavorites[userId] = (allFavorites[userId] || []).filter(m => String(m.id) !== movieId);
+  writeFavorites(allFavorites);
+  res.json({ success: true });
 });
