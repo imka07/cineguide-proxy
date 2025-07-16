@@ -104,6 +104,7 @@ app.listen(PORT, () => {
 });
 
 
+
 // Утилиты
 const readFavorites = () => {
   if (!fs.existsSync(FAVORITES_FILE)) return {};
@@ -112,6 +113,8 @@ const readFavorites = () => {
 const writeFavorites = (data) => {
   fs.writeFileSync(FAVORITES_FILE, JSON.stringify(data, null, 2));
 };
+
+
 
 // Получить избранное
 app.get('/favorites/:userId', (req, res) => {
