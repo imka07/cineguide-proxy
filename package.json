@@ -1,6 +1,7 @@
 {
   "name": "cineguide-proxy",
   "version": "1.0.0",
+  "type": "module",     
   "description": "Proxy for TMDb API with caching",
   "main": "server.js",
   "scripts": {
@@ -8,9 +9,6 @@
     "dev": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
@@ -19,6 +17,6 @@
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.20"
   }
 }
