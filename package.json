@@ -1,7 +1,7 @@
 {
   "name": "cineguide-proxy",
   "version": "1.0.0",
-  "type": "module",     
+  "type": "module",
   "description": "Proxy for TMDb API with caching",
   "main": "server.js",
   "scripts": {
@@ -13,6 +13,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "http-proxy-middleware": "^3.0.5",
     "node-cache": "^5.1.2",
     "node-fetch": "^3.3.2"
   },
