@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
+
 dotenv.config();
 const TMDB_KEY = process.env.TMDB_KEY;
 const PORT    = process.env.PORT || 3000;
@@ -24,10 +25,15 @@ app.use(
   createProxyMiddleware({
     target: 'https://image.tmdb.org',
     changeOrigin: true,
-    pathRewrite: { '^/image': '/t/p/w500' },
-    headers: { host: 'image.tmdb.org' },
-    onError(err, req, res) {
-      console.error('Image proxy error:', err);
+    secure: true,
+    pathRewrite: {
+      '^/image': '/t/p/w500',      // каждый /image/XYZ → /t/p/w500/XYZ
+    },
+    onProxyReq: (proxyReq, req) => {
+      console.log('Proxying image request:', req.url);
+    },
+    onError: (err, _req, res) => {
+      console.error('Image proxy error:', err.message);
       res.sendStatus(502);
     },
   })
